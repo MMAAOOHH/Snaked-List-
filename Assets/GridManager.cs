@@ -5,13 +5,11 @@ using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    [SerializeField]private int _widht;
-    [SerializeField]private int _height;
+    [SerializeField] private int _widht, _height;
     [SerializeField] private float _tileBorder;
     
     [SerializeField]private GameObject _tilePrefab;
-    // private Tile[,] _tiles;
-
+    
     private void Start()
     {
         GridSetup();
@@ -29,8 +27,10 @@ public class GridManager : MonoBehaviour
                 Tile tile = tileGo.GetComponent<Tile>();
                 tile.tilePosition = new Vector2Int(x, y);
                 tile.spriteScale -= _tileBorder;
-                // _tiles[x, y] = tile;
             }
         }
+        float centerX = -_widht / 2;
+        float centerY = -_height / 2;
+        transform.position = new Vector3(centerX, centerY);
     }
 }
