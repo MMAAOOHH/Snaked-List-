@@ -25,8 +25,8 @@ public class Snake : MonoBehaviour
     {
         _horizontal = Input.GetAxisRaw("Horizontal");
         _vertical = Input.GetAxisRaw("Vertical");
-        //Ger bugg fixa bättre lösning
-        if (Input.anyKey)
+
+        if (_horizontal != 0 || _vertical != 0)
         {
             _moveDirection = new Vector2Int((int) _horizontal, (int) _vertical);
         }
