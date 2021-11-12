@@ -1,11 +1,14 @@
+using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class Tile : MonoBehaviour
 {
     public Vector2Int tilePosition;
+    [NonSerialized] public float spriteScale = 1f;
     private SpriteRenderer _renderer;
     private Color _color;
+
 
     private void Start()
     {
@@ -16,5 +19,6 @@ public class Tile : MonoBehaviour
         
         _renderer = GetComponent<SpriteRenderer>();
         _renderer.color = _color;
+        transform.localScale *= spriteScale;
     }
 }
