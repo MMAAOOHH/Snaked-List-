@@ -16,7 +16,7 @@ public class Snake : MonoBehaviour
     private void Awake()
     {
         _gridPosition = new Vector2Int(0, 0);
-        _maxMoveTime = 1;
+        _maxMoveTime = 0.6f;
         _moveTime = _maxMoveTime;
         _moveDirection = new Vector2Int(1,0);
     }
@@ -38,7 +38,10 @@ public class Snake : MonoBehaviour
             _moveTime -= _maxMoveTime;
         }
 
-        transform.position = new Vector3(_gridPosition.x, _gridPosition.y);
+        // transform.position = new Vector3(_gridPosition.x, _gridPosition.y);
+        Vector3 _targetPosition = new Vector3(_gridPosition.x, _gridPosition.y);
+        transform.position = Vector3.Lerp(transform.position, _targetPosition, _moveTime);
+
     }
 
     public void SpeedIncrease(float speedIncrease)
