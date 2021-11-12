@@ -40,4 +40,9 @@ public class Snake : MonoBehaviour
 
         transform.position = new Vector3(_gridPosition.x, _gridPosition.y);
     }
+
+    public void SpeedIncrease(float speedIncrease)
+    {
+        _maxMoveTime -= speedIncrease;
+    }
 }
