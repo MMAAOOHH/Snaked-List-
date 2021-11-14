@@ -8,8 +8,7 @@ public class Tile : MonoBehaviour
     [NonSerialized] public float spriteScale = 1f;
     private SpriteRenderer _renderer;
     private Color _color;
-
-
+    
     private void Start()
     {
         _color = new Color(

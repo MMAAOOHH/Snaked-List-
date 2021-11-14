@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
-    [SerializeField] private int _widht, _height;
+    [SerializeField] private Vector2 size;
     [SerializeField] private float _tileBorder;
     
     [SerializeField]private GameObject _tilePrefab;
@@ -17,9 +17,9 @@ public class GridManager : MonoBehaviour
 
     public void GridSetup() 
     {
-        for (int x = 0; x < _widht; x++) 
+        for (int x = 0; x < size.x; x++) 
         {
-            for (int y = 0; y < _height; y++) 
+            for (int y = 0; y < size.y; y++) 
             {
                 GameObject tileGo = Instantiate(_tilePrefab, new Vector3(x, y, 0f), Quaternion.identity, transform);
                 tileGo.name = $"Tile_({x},{y})";
@@ -29,8 +29,8 @@ public class GridManager : MonoBehaviour
                 tile.spriteScale -= _tileBorder;
             }
         }
-        float centerX = -_widht / 2;
-        float centerY = -_height / 2;
+        float centerX = -size.x / 2;
+        float centerY = -size.y / 2;
         transform.position = new Vector3(centerX, centerY);
     }
 }

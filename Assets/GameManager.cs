@@ -1,16 +1,21 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    void Start()
-    {
-    }
+    public GameObject snake;
+    private int score;
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
     {
-        
+        Reset();
+    }
+    
+    private void Reset()
+    {
+        Instantiate(snake);
+        score = 0;
     }
 }
