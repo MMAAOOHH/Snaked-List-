@@ -15,6 +15,7 @@ public class Snake : MonoBehaviour
 
     private LLinkedList<Transform> _body;
     public Transform segmentPrefab;
+    private int _startLenght = 4;
 
     
     private void Awake()
@@ -29,17 +30,22 @@ public class Snake : MonoBehaviour
     {
         _body = new LLinkedList<Transform>();
         _body.AddLast(transform);
-        Grow();
-        Grow();
-        Grow();
-        Grow();
-        Grow();
+        for (int i = 0; i < _startLenght; i++)
+        {
+            Grow();
+        }
     }
 
     private void Update()
     {
         _horizontal = Input.GetAxisRaw("Horizontal");
         _vertical = Input.GetAxisRaw("Vertical");
+
+        for (int i = _body.Count - 1; i > 0; i--)
+        {
+            _body[i].position = _body[i - 1].position;
+        }
+        
         if (_horizontal != 0 || _vertical != 0)
         { 
             _moveDirection = new Vector2Int((int) _horizontal, (int) _vertical);
@@ -58,7 +64,7 @@ public class Snake : MonoBehaviour
 
     private void Grow()
     {
-        Transform segment = Instantiate(segmentPrefab,transform);
+        Transform segment = Instantiate(segmentPrefab);
         segment.position = _body[_body.Count - 1].position;
         _body.AddLast(segment);
     }
