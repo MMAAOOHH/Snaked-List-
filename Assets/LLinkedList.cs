@@ -3,24 +3,31 @@ using System.Collections.Generic;
 
 public class LLinkedList<T> 
 {
+    private const int INITIAL_CAPACITY = 8;
+    private const int MAXIMUM_GROWTH = 16;
+    
     private T[] _items;
     private int _count;
+    private int _capacity;
+    
     private LListNode<T> head;
     
-    public LLinkedList()
+    public LLinkedList(int capacity = INITIAL_CAPACITY)
     {
         head = null;
+        _items = new T[capacity];
     }
 
-    public void AddLast(T newItem)
+    public void AddLast(T item)
     {
-        LListNode<T> _newItem = new LListNode<T>(newItem);
-        _items[_count++] = newItem;
+        manageSize();
+        _items[_count++] = item;
+        LListNode<T> _newItem = new LListNode<T>(item);
         _newItem.next = null;
         
         if (head == null)
         {
-            head = new LListNode<T>(newItem);
+            head = new LListNode<T>(item);
             return;
         }
 
@@ -42,10 +49,20 @@ public class LLinkedList<T>
         }
     }
     
-    
     public int Count {
         get {
             return _count;
+        }
+    }
+    
+    private void manageSize()
+    {
+        if (_count == _items.Length)
+        {
+            _capacity = _items.Length < MAXIMUM_GROWTH ? _items.Length * 2 : _items.Length + MAXIMUM_GROWTH;
+            T[] expanded = new T[_capacity];
+            _items.CopyTo(expanded, 0);
+            _items = expanded;
         }
     }
 }

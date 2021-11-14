@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4086674789104534021}
   - component: {fileID: 4086674789104534043}
   m_Layer: 0
-  m_Name: SnakeHead
+  m_Name: Snake
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -96,3 +96,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1adce7a2ecc4b4b46b6b9700815ad62f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  segmentPrefab: {fileID: 7380851850028444982, guid: 6ce5ce9ec2676e44f986a86889b9e212, type: 3}

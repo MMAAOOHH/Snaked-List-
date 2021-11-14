@@ -29,6 +29,11 @@ public class Snake : MonoBehaviour
     {
         _body = new LLinkedList<Transform>();
         _body.AddLast(transform);
+        Grow();
+        Grow();
+        Grow();
+        Grow();
+        Grow();
     }
 
     private void Update()
@@ -53,7 +58,7 @@ public class Snake : MonoBehaviour
 
     private void Grow()
     {
-        Transform segment = Instantiate(segmentPrefab);
+        Transform segment = Instantiate(segmentPrefab,transform);
         segment.position = _body[_body.Count - 1].position;
         _body.AddLast(segment);
     }
