@@ -17,12 +17,12 @@ public class Snake : MonoBehaviour
     public Transform segmentPrefab;
     private int _startLenght = 4;
 
-    
     private void Awake()
     {
         _gridPosition = new Vector2Int(0, 0);
         _maxMoveTime = 0.6f;
         _moveTime = _maxMoveTime;
+        //Start direction
         _moveDirection = new Vector2Int(-1,0);
     }
 
@@ -30,7 +30,7 @@ public class Snake : MonoBehaviour
     {
         _body = new LLinkedList<Transform>();
         _body.AddLast(transform);
-        for (int i = 0; i < _startLenght; i++)
+        for (int i = 0; i < _startLenght - 1; i++)
         {
             Grow();
         }
@@ -41,11 +41,6 @@ public class Snake : MonoBehaviour
         _horizontal = Input.GetAxisRaw("Horizontal");
         _vertical = Input.GetAxisRaw("Vertical");
 
-        for (int i = _body.Count - 1; i > 0; i--)
-        {
-            _body[i].position = _body[i - 1].position;
-        }
-        
         if (_horizontal != 0 || _vertical != 0)
         { 
             _moveDirection = new Vector2Int((int) _horizontal, (int) _vertical);
@@ -58,15 +53,20 @@ public class Snake : MonoBehaviour
             _moveTime -= _maxMoveTime;
         }
         
+        for (int i = _body.Count - 1; i > 0; i--)
+        {
+            _body[i].position = _body[i - 1].position;
+        }
+        
         Vector3 targetPosition = new Vector3(_gridPosition.x, _gridPosition.y);
         transform.position = Vector3.Lerp(transform.position, targetPosition, _moveTime);
     }
 
     private void Grow()
     {
-        Transform segment = Instantiate(segmentPrefab);
-        segment.position = _body[_body.Count - 1].position;
-        _body.AddLast(segment);
+        Transform newSegment = Instantiate(segmentPrefab, transform);
+        newSegment.position = _body[_body.Count - 1].position;
+        _body.AddLast(newSegment);
     }
     
     public void SpeedIncrease(float speedIncrease)

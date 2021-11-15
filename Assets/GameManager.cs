@@ -6,16 +6,23 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public GameObject snake;
-    private int score;
+    public GameObject food;
+    private int _score;
 
     private void Start()
     {
         Reset();
+        SpawnFood();
     }
     
     private void Reset()
     {
         Instantiate(snake);
-        score = 0;
+        _score = 0;
+    }
+
+    private void SpawnFood()
+    {
+        Instantiate(food);
     }
 }
