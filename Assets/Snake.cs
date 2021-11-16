@@ -6,7 +6,6 @@ using UnityEngine;
 public class Snake : MonoBehaviour
 {
     private GameManager _gameManager;
-    
     private LLinkedList<Transform> _body;
     public Transform segmentPrefab;
     private int _startingSegments = 4;
@@ -14,10 +13,6 @@ public class Snake : MonoBehaviour
     //Movement variables
     private Vector2Int _gridPosition;
     public Vector2Int GridPosition => _gridPosition;
-
-    private Tile[,] _tiles;
-    private Tile _gridTile;
-    
     private Vector2Int _moveDirection;
     private float _moveTime;
     private float _maxMoveTime;
@@ -29,7 +24,7 @@ public class Snake : MonoBehaviour
     private void Awake()
     {
         _gridPosition = new Vector2Int(11, 6);
-        _maxMoveTime = 0.6f;
+        _maxMoveTime = 0.2f;
         _moveTime = _maxMoveTime;
         
         //Start direction
@@ -49,10 +44,10 @@ public class Snake : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(_gridPosition);
-        
         _horizontal = Input.GetAxisRaw("Horizontal");
         _vertical = Input.GetAxisRaw("Vertical");
+
+
         
         if (_horizontal != 0 || _vertical != 0)
         { 
@@ -65,24 +60,23 @@ public class Snake : MonoBehaviour
             _gridPosition += _moveDirection;
             _moveTime -= _maxMoveTime;
         }
-
-   
-        //Segment Movement
+        //Segment Follow
         for (int i = _body.Count; i-- > 1;)
         {
             _body[i].position = _body[i - 1].position;
         }
+        
         //Head Movement
         _gridPosition = _gameManager.WrapCheck(_gridPosition);
-        Vector3 targetPosition = new Vector3(_gridPosition.x, _gridPosition.y);
-        transform.position = Vector3.Lerp(transform.position, targetPosition, _moveTime);
-        
-    }
+        transform.position = new Vector3(_gridPosition.x, _gridPosition.y);
 
-    private void Grow()
+    }
+    
+    public void Grow()
     {
         Transform newSegment = Instantiate(segmentPrefab, transform);
-        newSegment.position = _body[_body.Count - 1].position;
+        Vector3 offset = new Vector3(-_moveDirection.x, -_moveDirection.y, 0);
+        newSegment.position = _body[_body.Count - 1].position + offset;
         _body.AddLast(newSegment);
     }
     

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
@@ -12,7 +13,7 @@ public class GameManager : MonoBehaviour
     private GameObject _food;
     private Tile _foodTile;
 
-    
+    [SerializeField] private Text scoreText;
     private int _score;
 
     private Snake _snake;
@@ -26,8 +27,7 @@ public class GameManager : MonoBehaviour
     {
         EatCheck();
     }
-
-
+    
     private void Reset()
     {
         _snake = Instantiate(snake);
@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
         if (_snake.GridPosition == _foodTile.gridPosition)
         {
             _score++;
+            _snake.Grow();
             Destroy(_food);
             SpawnFood();
         }
