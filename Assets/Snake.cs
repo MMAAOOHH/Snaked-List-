@@ -24,7 +24,7 @@ public class Snake : MonoBehaviour
     private void Awake()
     {
         _gridPosition = new Vector2Int(11, 6);
-        _maxMoveTime = 0.2f;
+        _maxMoveTime = 0.5f;
         _moveTime = _maxMoveTime;
         
         //Start direction
@@ -47,8 +47,6 @@ public class Snake : MonoBehaviour
         _horizontal = Input.GetAxisRaw("Horizontal");
         _vertical = Input.GetAxisRaw("Vertical");
 
-
-        
         if (_horizontal != 0 || _vertical != 0)
         { 
             _moveDirection = new Vector2Int((int) _horizontal, (int) _vertical);
@@ -57,19 +55,23 @@ public class Snake : MonoBehaviour
         _moveTime += Time.deltaTime;
         if (_moveTime >= _maxMoveTime)
         {
-            _gridPosition += _moveDirection;
+            Move();
             _moveTime -= _maxMoveTime;
         }
-        //Segment Follow
+    }
+
+    private void Move()
+    {
+        _gridPosition += _moveDirection;
+        _gridPosition = _gameManager.WrapCheck(_gridPosition);
+        
+        //Segment Movement
         for (int i = _body.Count; i-- > 1;)
         {
             _body[i].position = _body[i - 1].position;
         }
-        
         //Head Movement
-        _gridPosition = _gameManager.WrapCheck(_gridPosition);
         transform.position = new Vector3(_gridPosition.x, _gridPosition.y);
-
     }
     
     public void Grow()
