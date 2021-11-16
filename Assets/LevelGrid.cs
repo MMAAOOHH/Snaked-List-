@@ -3,23 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridManager : MonoBehaviour
+public class LevelGrid : MonoBehaviour
 {
     [SerializeField] private Vector2 size;
+    public Vector2 Size => size;
+    
     [SerializeField] private Tile tilePrefab;
     [SerializeField] private float tileBorder;
 
-    private Transform[,] _tiles;
-    
-    private void Start()
+    private Tile[,] _tiles;
+
+    private void Awake()
     {
         GenerateGrid();
     }
 
     private void GenerateGrid() 
     {
-        _tiles = new Transform[(int)size.x,(int)size.y];
-
+        _tiles = new Tile[(int)size.x,(int)size.y];
+        
         for (int x = 0; x < size.x; x++) 
         {
             for (int y = 0; y < size.y; y++) 
@@ -28,11 +30,20 @@ public class GridManager : MonoBehaviour
                 tile.name = $"Tile_({x},{y})";
                 tile.gridPosition = new Vector2Int(x, y);
                 tile.spriteScale -= tileBorder;
-                _tiles[x, y] = tile.transform;
+                _tiles[x, y] = tile;
             }
         }
-        float centerX = -size.x / 2 + 0.5f;
-        float centerY = -size.y / 2 + 0.5f;
-        transform.position = new Vector3(centerX, centerY);
+        CenterCamera();
+    }
+
+    private void CenterCamera()
+    {
+        Camera.main.transform.position = new Vector3((size.x / 2 - 0.5f), size.y / 2 - 0.5f, -10);
+
+    }
+    
+    public Tile GetTile(int x, int y)
+    {
+        return _tiles[x,y];
     }
 }
