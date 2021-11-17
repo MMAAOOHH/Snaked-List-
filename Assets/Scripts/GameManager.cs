@@ -17,7 +17,14 @@ public class GameManager : MonoBehaviour
     private int _score;
 
     private Snake _snake;
-    
+
+    private AudioSource _audioSource;
+
+    private void Awake()
+    {
+        _audioSource = GetComponent<AudioSource>();
+    }
+
     private void Start()
     {
         Reset();
@@ -28,25 +35,31 @@ public class GameManager : MonoBehaviour
         EatCheck();
     }
     
-    private void Reset()
+    public void Reset()
     {
-        _snake = Instantiate(snake);
         _score = 0;
+        _snake = Instantiate(snake);
+        Destroy(_food);
         SpawnFood();
     }
     private void SpawnFood()
     {
-        Tile randomTile = levelGrid.GetTile(Random.Range(0,(int)levelGrid.Size.x),(Random.Range(0,(int)levelGrid.Size.y)));
-        _foodTile = randomTile;
-        _food = Instantiate(foodPrefab, randomTile.transform);
+        // do
+        // {
+            Tile randomTile = levelGrid.GetTile(Random.Range(0,(int)levelGrid.Size.x),(Random.Range(0,(int)levelGrid.Size.y)));
+            _foodTile = randomTile;
+        // } while (_snake.Body.Contains(_foodTile.transform));
+        
+        _food = Instantiate(foodPrefab, _foodTile.transform);
     }
-
+    
     private void EatCheck()
     {
         if (_snake.GridPosition == _foodTile.gridPosition)
         {
             _score++;
             _snake.Grow();
+            _audioSource.Play();
             Destroy(_food);
             SpawnFood();
         }

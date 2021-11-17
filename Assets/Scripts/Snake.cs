@@ -1,13 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Snake : MonoBehaviour
 {
     private GameManager _gameManager;
     private LLinkedList<Transform> _body;
-    public Transform segmentPrefab;
+    [SerializeField]private Transform segmentPrefab;
     private int _startingSegments = 4;
     
     //Movement variables
@@ -23,8 +20,7 @@ public class Snake : MonoBehaviour
     
     private void Awake()
     {
-        _gridPosition = new Vector2Int(11, 6);
-        _maxMoveTime = 0.5f;
+        _maxMoveTime = 0.2f;
         _moveTime = _maxMoveTime;
         
         //Start direction
@@ -47,19 +43,24 @@ public class Snake : MonoBehaviour
         _horizontal = Input.GetAxisRaw("Horizontal");
         _vertical = Input.GetAxisRaw("Vertical");
 
+        if (_horizontal != 0 && _vertical != 0)
+        {
+            return;
+        }
+        
         if (_horizontal != 0 || _vertical != 0)
-        { 
+        {
             _moveDirection = new Vector2Int((int) _horizontal, (int) _vertical);
         }
         
         _moveTime += Time.deltaTime;
-        if (_moveTime >= _maxMoveTime)
+        if (_moveTime > _maxMoveTime)
         {
             Move();
             _moveTime -= _maxMoveTime;
         }
     }
-
+    
     private void Move()
     {
         _gridPosition += _moveDirection;
@@ -72,14 +73,37 @@ public class Snake : MonoBehaviour
         }
         //Head Movement
         transform.position = new Vector3(_gridPosition.x, _gridPosition.y);
+        CheckCollide();
     }
-    
+
     public void Grow()
     {
-        Transform newSegment = Instantiate(segmentPrefab, transform);
-        Vector3 offset = new Vector3(-_moveDirection.x, -_moveDirection.y, 0);
-        newSegment.position = _body[_body.Count - 1].position + offset;
+        Transform newSegment = Instantiate(segmentPrefab);
+        // Vector3 offset = new Vector3(-_moveDirection.x, -_moveDirection.y, 0);
+        newSegment.position = _body[_body.Count - 1].position /*+ offset*/;
+        newSegment.name = _body.Count.ToString();
         _body.AddLast(newSegment);
+    }
+    
+    private void CheckCollide()
+    {
+        for (int i = 1; i < _body.Count; i++)
+        {
+            if (transform.position == _body[i].position)
+            {
+                Death();
+            }
+        }
+    }
+
+    private void Death()
+    {
+        Destroy(gameObject);
+        for (int i = 1; i < _body.Count; i++)
+        {
+            Destroy(_body[i].gameObject);
+        }
+        _gameManager.Reset();
     }
     
     public void SpeedIncrease(float speedIncrease)

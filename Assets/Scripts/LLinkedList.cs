@@ -55,6 +55,28 @@ public class LLinkedList<T>
         }
     }
     
+    public int IndexOf(T item)
+    {
+        for (int i = 0; i < _items.Length; i++)
+        {
+            if (object.Equals(item, _items[i]))
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+    
+    public bool Contains(T item)
+    {
+        return IndexOf(item) != -1;
+    }
+    
+    public void Clear()
+    {
+        _items = new T[INITIAL_CAPACITY];
+    }
+    
     private void manageSize()
     {
         if (_count == _items.Length)
