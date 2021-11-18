@@ -15,7 +15,6 @@ public class FoodTile : MonoBehaviour
             Random.Range(0f, 1f),
             Random.Range(0f, 1f));
         _color2 = InvertColor(_color1);
-        
         _renderer = GetComponent<SpriteRenderer>();
     }
 
@@ -23,6 +22,8 @@ public class FoodTile : MonoBehaviour
     {
         var t = (Mathf.Sin(Time.time * _lerpSpeed) + 1) / 2.0;
         _renderer.color = Color.Lerp(_color1,_color2, (float)t);
+        float scaleFactor = 1.1f;
+        transform.localScale = Vector3.Lerp(Vector3.one, Vector3.one * scaleFactor, (float)t);
     }
     
     private Color InvertColor (Color color)

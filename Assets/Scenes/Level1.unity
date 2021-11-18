@@ -364,8 +364,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2e1ba920ccbc8044a73683bf70f1de3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  snakePrefab: {fileID: 4086674789104534043, guid: 4f3616d7892b0c541938b02c2a0ec576, type: 3}
   levelGrid: {fileID: 7645844371040246292}
-  snake: {fileID: 4086674789104534043, guid: 4f3616d7892b0c541938b02c2a0ec576, type: 3}
   foodPrefab: {fileID: 9009188595733842125, guid: ec1d8ba60d68c444babe5de878b30a0d, type: 3}
   scoreText: {fileID: 0}
 --- !u!1 &770136248
