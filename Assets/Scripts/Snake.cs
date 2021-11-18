@@ -45,14 +45,13 @@ public class Snake : MonoBehaviour
         _horizontal = Input.GetAxisRaw("Horizontal");
         _vertical = Input.GetAxisRaw("Vertical");
 
-        if (_horizontal != 0 && _vertical != 0)
+        if (_horizontal != 0 && _horizontal != -_moveDirection.x)
         {
-            return;
+            _moveDirection = new Vector2Int((int)_horizontal,0);
         }
-        
-        if (_horizontal != 0 || _vertical != 0)
+        else if (_vertical != 0 && _vertical != -_moveDirection.y)
         {
-            _moveDirection = new Vector2Int((int) _horizontal, (int) _vertical);
+            _moveDirection = new Vector2Int(0, (int) _vertical);
         }
         
         _moveTime += Time.deltaTime;

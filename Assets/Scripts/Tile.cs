@@ -20,9 +20,4 @@ public class Tile : MonoBehaviour
         _renderer.color = _color;
         transform.localScale *= spriteScale;
     }
-
-    public Vector2Int GetTilePosition()
-    {
-        return gridPosition;
-    }
 }

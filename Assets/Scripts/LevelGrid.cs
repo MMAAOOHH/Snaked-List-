@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelGrid : MonoBehaviour
@@ -33,13 +30,6 @@ public class LevelGrid : MonoBehaviour
                 _tiles[x, y] = tile;
             }
         }
-        CenterCamera();
-    }
-
-    private void CenterCamera()
-    {
-        Camera.main.transform.position = new Vector3((size.x / 2 - 0.5f), size.y / 2 - 0.5f, -10);
-
     }
     
     public Tile GetTile(int x, int y)

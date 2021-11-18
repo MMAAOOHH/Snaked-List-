@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        
+        Camera.main.transform.position = new Vector3((levelGrid.Size.x / 2 - 0.5f), levelGrid.Size.y / 2 - 0.5f, -10);
         Reset();
     }
 
@@ -40,7 +42,8 @@ public class GameManager : MonoBehaviour
     
     public void Reset()
     {
-        Score(0);
+        _score = 0;
+        Score(_score);
         _snake = Instantiate(snakePrefab);
         Destroy(_food);
         SpawnFood();

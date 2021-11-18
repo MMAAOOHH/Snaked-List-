@@ -6,11 +6,11 @@ public class LLinkedList<T>
     private const int INITIAL_CAPACITY = 8;
     private const int MAXIMUM_GROWTH = 16;
     
+    private LListNode<T> head;
+    
     private T[] _items;
     private int _count;
     private int _capacity;
-    
-    private LListNode<T> head;
     
     public LLinkedList(int capacity = INITIAL_CAPACITY)
     {
@@ -70,11 +70,6 @@ public class LLinkedList<T>
     public bool Contains(T item)
     {
         return IndexOf(item) != -1;
-    }
-    
-    public void Clear()
-    {
-        _items = new T[INITIAL_CAPACITY];
     }
     
     private void manageSize()
