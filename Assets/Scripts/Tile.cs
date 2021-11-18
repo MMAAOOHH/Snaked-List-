@@ -4,7 +4,7 @@ using Random = UnityEngine.Random;
 
 public class Tile : MonoBehaviour
 {
-    public Vector2Int gridPosition;
+    [NonSerialized] public Vector2Int gridPosition;
     [NonSerialized] public float spriteScale = 1f;
     private SpriteRenderer _renderer;
     private Color _color;

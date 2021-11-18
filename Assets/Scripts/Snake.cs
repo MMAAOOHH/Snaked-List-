@@ -3,120 +3,125 @@ using UnityEngine;
 public class Snake : MonoBehaviour
 {
     private GameManager _gameManager;
-    private LLinkedList<Transform> _bodyParts;
+    private AudioSource _audioSource;
+    
+    private LLinkedList<Transform> _bodySegments;
     private LLinkedList<Vector2Int> _bodyGridPositions;
     [SerializeField]private Transform segmentPrefab;
     private int _startingSegments = 4;
     
-    //Movement variables
     private Vector2Int _gridPosition;
-    public Vector2Int GridPosition => _gridPosition;
     private Vector2Int _moveDirection;
-    private float _moveTime;
+    private float _minMoveTime;
     private float _maxMoveTime;
     
-    //Input variables
     private float _horizontal;
     private float _vertical;
     
     private void Awake()
     {
-        _maxMoveTime = 0.2f;
-        _moveTime = _maxMoveTime;
-        
-        _bodyParts = new LLinkedList<Transform>();
-        _bodyParts.AddLast(transform);
-        
-        //Start direction
-        _moveDirection = new Vector2Int(-1,0);
+        _gameManager = FindObjectOfType<GameManager>();
+        _bodySegments = new LLinkedList<Transform>();
+        _bodySegments.AddLast(transform);
     }
 
     private void Start()
     {
-        _gameManager = FindObjectOfType<GameManager>();
-        for (int i = 0; i < _startingSegments; i++)
-        {
-            Grow();
-        }
+        SetStartSize(_startingSegments);
+        LevelGrid levelGrid = FindObjectOfType<LevelGrid>();
+        _gridPosition = new Vector2Int((int)levelGrid.Size.x/2, (int)levelGrid.Size.y/2); //Setting Start position
+        _moveDirection = new Vector2Int(-1,0); //Setting Start direction
+        _maxMoveTime = 0.2f;
+        _minMoveTime = _maxMoveTime;
     }
 
     private void Update()
     {
-        _horizontal = Input.GetAxisRaw("Horizontal");
-        _vertical = Input.GetAxisRaw("Vertical");
+        CheckInput();
+        _minMoveTime += Time.deltaTime;
+        if (_minMoveTime > _maxMoveTime)
+        {
+            MoveSnake();
+            _minMoveTime -= _maxMoveTime;
+        }
+    }
 
-        if (_horizontal != 0 && _horizontal != -_moveDirection.x)
+    private void SetStartSize(int numberOfSegments)
+    {
+        for (int i = 0; i < numberOfSegments; i++)
         {
-            _moveDirection = new Vector2Int((int)_horizontal,0);
-        }
-        else if (_vertical != 0 && _vertical != -_moveDirection.y)
-        {
-            _moveDirection = new Vector2Int(0, (int) _vertical);
-        }
-        
-        _moveTime += Time.deltaTime;
-        if (_moveTime > _maxMoveTime)
-        {
-            Move();
-            _moveTime -= _maxMoveTime;
+            Grow();
         }
     }
     
-    private void Move()
+    private void CheckInput()
+    {
+        _horizontal = Input.GetAxisRaw("Horizontal");
+        _vertical = Input.GetAxisRaw("Vertical");
+        
+        if (_horizontal != 0 && (int)_horizontal != -_moveDirection.x)
+        {
+            _moveDirection = new Vector2Int((int)_horizontal,0);
+        }
+        else if (_vertical != 0 && (int)_vertical != -_moveDirection.y)
+        {
+            _moveDirection = new Vector2Int(0, (int) _vertical);
+        }
+    }
+    
+    private void MoveSnake()
     {
         _gridPosition += _moveDirection;
-        _gridPosition = _gameManager.WrapCheck(_gridPosition);
+        _gridPosition = _gameManager.LevelWrapCheck(_gridPosition);
         
         //Segment Movement
-        for (int i = _bodyParts.Count; i-- > 1;)
+        for (int i = _bodySegments.Count; i-- > 1;)
         {
-            _bodyParts[i].position = _bodyParts[i - 1].position;
+            _bodySegments[i].position = _bodySegments[i - 1].position;
         }
         //Head Movement
         transform.position = new Vector3(_gridPosition.x, _gridPosition.y);
         
-        CheckCollide();
+        CheckSelfCollision();
+        _gameManager.EatCheck(_gridPosition);
     }
-    private void CheckCollide()
+    
+    public void Grow()
     {
-        for (int i = 1; i < _bodyParts.Count; i++)
+        Transform newSegment = Instantiate(segmentPrefab);
+        newSegment.position = _bodySegments[_bodySegments.Count - 1].position;
+        _bodySegments.AddLast(newSegment);
+    }
+    
+    private void CheckSelfCollision()
+    {
+        for (int i = 1; i < _bodySegments.Count; i++)
         {
-            if (transform.position == _bodyParts[i].position)
+            if (transform.position == _bodySegments[i].position)
             {
                 Death();
             }
         }
     }
+    
     private void Death()
     {
         Destroy(gameObject);
-        for (int i = 1; i < _bodyParts.Count; i++)
+        for (int i = 1; i < _bodySegments.Count; i++)
         {
-            Destroy(_bodyParts[i].gameObject);
+            Destroy(_bodySegments[i].gameObject);
         }
-        _gameManager.Reset();
+        _gameManager.GameOver();
     }
-    public void Grow()
-    {
-        Transform newSegment = Instantiate(segmentPrefab);
-        newSegment.position = _bodyParts[_bodyParts.Count - 1].position /*+ offset*/;
-        newSegment.name = _bodyParts.Count.ToString();
-        _bodyParts.AddLast(newSegment);
-    }
-
+    
     public LLinkedList<Vector2Int> GetBodyGridPositions()
     {
         _bodyGridPositions = new LLinkedList<Vector2Int>();
-        for (int i = 1; i < _bodyParts.Count; i++)
+        for (int i = 1; i < _bodySegments.Count; i++)
         {
-            Vector2Int gridPosition = new Vector2Int((int)_bodyParts[i].transform.position.x, (int)_bodyParts[i].transform.position.y);
+            Vector2Int gridPosition = new Vector2Int((int)_bodySegments[i].transform.position.x, (int)_bodySegments[i].transform.position.y);
             _bodyGridPositions.AddLast(gridPosition);
         }
         return _bodyGridPositions;
-    }
-    
-    public void SpeedIncrease(float speedIncrease)
-    {
-        _maxMoveTime -= speedIncrease;
     }
 }

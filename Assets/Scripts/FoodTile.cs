@@ -26,8 +26,8 @@ public class FoodTile : MonoBehaviour
         transform.localScale = Vector3.Lerp(Vector3.one, Vector3.one * scaleFactor, (float)t);
     }
     
-    private Color InvertColor (Color color)
+    private Color InvertColor (Color colorToInvert)
     {
-        return color = new Color(1.0f - color.r, 1.0f - color.g, 1.0f - color.b);
+        return colorToInvert = new Color(1.0f - colorToInvert.r, 1.0f - colorToInvert.g, 1.0f - colorToInvert.b);
     }
 }

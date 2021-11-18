@@ -7,6 +7,9 @@ using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
+
+    [SerializeField] private GameObject _inGameUi;
+    [SerializeField] private GameObject _gameOverPanel;
     [SerializeField] private Snake snakePrefab;
     [SerializeField] private LevelGrid levelGrid;
     [SerializeField] private GameObject foodPrefab;
@@ -28,16 +31,9 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        
+        _inGameUi.SetActive(true);
         Camera.main.transform.position = new Vector3((levelGrid.Size.x / 2 - 0.5f), levelGrid.Size.y / 2 - 0.5f, -10);
         Reset();
-    }
-
-    private void Update()
-    {
-        
-        EatCheck();
-        
     }
     
     public void Reset()
@@ -48,6 +44,7 @@ public class GameManager : MonoBehaviour
         Destroy(_food);
         SpawnFood();
     }
+    
     private void SpawnFood()
     { 
         _snakeGridPositions = _snake.GetBodyGridPositions();
@@ -60,16 +57,16 @@ public class GameManager : MonoBehaviour
         
         _food = Instantiate(foodPrefab, _foodTile.transform);
     }
-
+    
     private Tile PickRandomGridTile()
     {
         Tile randomTile = levelGrid.GetTile(Random.Range(0,(int)levelGrid.Size.x),(Random.Range(0,(int)levelGrid.Size.y)));
         return randomTile;
     }
     
-    private void EatCheck()
+    public void EatCheck(Vector2Int snakeHeadPosition)
     {
-        if (_snake.GridPosition == _foodTile.gridPosition)
+        if (snakeHeadPosition == _foodTile.gridPosition)
         {
             Score(1);
             _snake.Grow();
@@ -79,13 +76,13 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    public void Score(int score)
+    private void Score(int score)
     {
         _score += score;
         scoreText.GetComponent<Text>().text = _score.ToString();
     }
     
-    public Vector2Int WrapCheck(Vector2Int gridPosition)
+    public Vector2Int LevelWrapCheck(Vector2Int gridPosition)
     {
         if (gridPosition.x < 0)
         {
@@ -108,5 +105,26 @@ public class GameManager : MonoBehaviour
         }
 
         return gridPosition;
+    }
+    
+    public void GameOver()
+    {
+        _inGameUi.SetActive(false);
+        _gameOverPanel.SetActive(true);
+        Time.timeScale = 0;
+    }
+
+    public void Restart()
+    {
+        _inGameUi.SetActive(true);
+        _gameOverPanel.SetActive(false);
+        Time.timeScale = 1;
+        Reset();
+    }
+
+    public void Quit()
+    {
+        print("Quit Game");
+        Application.Quit();
     }
 }
